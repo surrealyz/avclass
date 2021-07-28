@@ -93,6 +93,10 @@ def main(args):
         ifile_l += [os.path.join(args.vtdir, 
                                   f) for f in os.listdir(args.vtdir)]
         ifile_are_vt = True
+    if (args.staticdir):
+        ifile_l += [os.path.join(args.staticdir,
+                                  f) for f in os.listdir(args.staticdir) if f.endswith('.static')]
+        ifile_are_vt = True
     if (args.lbdir):
         ifile_l += [os.path.join(args.lbdir, 
                                   f) for f in os.listdir(args.lbdir)]
@@ -379,6 +383,9 @@ if __name__=='__main__':
     argparser.add_argument('-vtdir',
         help='existing directory with VT reports')
 
+    argparser.add_argument('-staticdir',
+        help='existing directory with VT reports, ends with .static')
+
     argparser.add_argument('-lbdir',
         help='existing directory with simplified JSON reports')
 
@@ -446,13 +453,14 @@ if __name__=='__main__':
 
     args = argparser.parse_args()
 
-    if not args.vt and not args.lb and not args.vtdir and not args.lbdir:
+    if not args.vt and not args.lb and not args.vtdir and not args.lbdir \
+            and not args.staticdir:
         sys.stderr.write('One of the following 4 arguments is required: '
-                          '-vt,-lb,-vtdir,-lbdir\n')
+                          '-vt,-lb,-vtdir,-lbdir,-staticdir\n')
         exit(1)
 
-    if (args.vt or args.vtdir) and (args.lb or args.lbdir):
-        sys.stderr.write('Use either -vt/-vtdir or -lb/-lbdir. '
+    if (args.vt or args.vtdir or args.staticdir) and (args.lb or args.lbdir):
+        sys.stderr.write('Use either -vt/-vtdir/-staticdir or -lb/-lbdir. '
                           'Both types of input files cannot be combined.\n')
         exit(1)
 
